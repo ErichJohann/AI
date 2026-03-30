@@ -40,7 +40,8 @@ class TwoJarsState:
         False
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return self.jars["J4"] == 2
+    
 
     def legalMoves( self ):
         """
@@ -61,7 +62,24 @@ class TwoJarsState:
         ['fillJ4', 'pourJ3intoJ4', 'emptyJ3', 'emptyJ4']
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        j4 = self.jars["J4"]
+        j3 = self.jars["J3"]
+        moves = []
+
+        if j4 < 4:
+            moves.append('fillJ4')
+            if j3 > 0:
+                moves.append('pourJ3intoJ4')
+        if j3 < 3:
+            moves.append('fillJ3')
+            if j4 > 0:
+                moves.append('pourJ4intoJ3')
+        if j4 > 0:
+            moves.append('emptyJ4')
+        if j3 > 0:
+            moves.append('emptyJ3')
+
+        return moves
 
     def result(self, move):
         """
@@ -75,7 +93,36 @@ class TwoJarsState:
         it returns a new object.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        j4 = self.jars['J4']
+        j3 = self.jars['J3']
+        spaceJ4 = 4 - j4
+        spaceJ3 = 3 - j3
+
+        match move:
+            case "fillJ4":
+                j4 = 4
+            case "fillJ3":
+                j3 = 3
+            case "emptyJ4":
+                j4 = 0
+            case "emptyJ3":
+                j3 = 0
+            case "pourJ4intoJ3":
+                if j4 >= spaceJ3:
+                    j3 = 3
+                    j4 = j4 - spaceJ3
+                else:
+                    j3 = j3 + j4
+                    j4 = 0
+            case "pourJ3intoJ4":
+                if j3 >= spaceJ4:
+                    j4 = 4
+                    j3 = j3 - spaceJ4
+                else:
+                    j4 = j4 + j3
+                    j3 = 0
+
+        return TwoJarsState((j4,j3))
 
     # Utilities for comparison and display
     def __eq__(self, other):
@@ -87,7 +134,13 @@ class TwoJarsState:
           True
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        j4 = self.jars['J4']
+        j3 = self.jars['J3']
+
+        other4 = other.jars['J4']
+        other3 = other.jars['J3']
+
+        return (j4 + j3) == (other4 + other3)
 
     def __hash__(self):
         return hash(str(self.jars))
@@ -97,7 +150,27 @@ class TwoJarsState:
           Returns a display string for the maze
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        #print("▰▱")
+        j4 = self.jars['J4']
+        j3 = self.jars['J3']
+        spaceJ4 = 4 - j4
+        spaceJ3 = 3 - j3
+
+        lines = []
+        horizontalLine = ('-' * (13))
+        lines.append(horizontalLine)
+
+        jar4 = "JAR 4 - " + ('▰' * j4) + ('▱' * spaceJ4) 
+        lines.append(jar4)
+
+        lines.append(" ")
+
+        jar3 = "JAR 3 - " + ('▰' * j3) + ('▱' * spaceJ3)
+        lines.append(jar3)
+
+        lines.append(horizontalLine)
+        return '\n'.join(lines)
+
 
     def __str__(self):
         return self.__getAsciiString()

@@ -18,6 +18,7 @@ Pacman agents (in searchAgents.py).
 """
 
 import util
+from T1_aux import getActionSequence, getStartNode, getChildNode
 
 class SearchProblem:
     """
@@ -113,12 +114,55 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    
+    node = getStartNode(problem)
+    frontier = util.Stack()
+    frontier.push(node)
+
+    closed = set()
+
+    while not frontier.isEmpty():
+        node = frontier.pop()
+
+        if node['STATE'] in closed:
+            continue
+
+        closed.add(node['STATE'])
+
+        if problem.isGoalState(node['STATE']):
+            return getActionSequence(node)
+
+        for sucessor in problem.expand(node['STATE']):
+            child_node = getChildNode(sucessor, node)
+            frontier.push(child_node)
+
+    return []
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    node = getStartNode(problem)
+    frontier = util.Queue()
+    frontier.push(node)
+
+    closed = set()
+
+    while not frontier.isEmpty():
+        node = frontier.pop()
+
+        if node['STATE'] in closed:
+            continue
+
+        closed.add(node['STATE'])
+
+        if problem.isGoalState(node['STATE']):
+            return getActionSequence(node)
+
+        for sucessor in problem.expand(node['STATE']):
+            child_node = getChildNode(sucessor, node)
+            frontier.push(child_node)
+
+    return []
 
 def nullHeuristic(state, problem=None):
     """
@@ -130,7 +174,33 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    node = getStartNode(problem)
+    fn_total_cost_for_node = lambda a_node: a_node['PATH-COST'] + heuristic(a_node['STATE'], problem=problem)
+
+    frontier = util.PriorityQueueWithFunction(fn_total_cost_for_node)
+    frontier.push(node)
+
+    explored = set()
+
+    while not frontier.isEmpty():
+        node = frontier.pop()        
+
+        if node['STATE'] in explored:
+            continue        
+
+        explored.add(node['STATE'])
+
+        if problem.isGoalState(node['STATE']): 
+          return getActionSequence(node)
+
+        successors = problem.expand(node['STATE'])
+
+        for sucessor in successors:
+            child_node = getChildNode(sucessor, node)
+            frontier.push(child_node)
+
+    return []
 
 
 # Abbreviations
