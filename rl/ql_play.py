@@ -16,6 +16,10 @@ from rl.environment_taxi import TaxiEnvironment
 from rl.qlt import QLearningAgentTabular
 from rl.qll import QLearningAgentLinear
 
+from rl.environment_cliff import CliffEnvironment
+from rl.environment_frozen_lake import FrozenLakeEnvironment
+from rl.environment_mountain_car import MountainCarEnvironment
+from rl.sarsa import SarsaAgentTabular
 
 EnvironmentWrapper = Callable[[gym.Env], object]
 ActionSelector = Callable[[object, object, object], int]
@@ -24,6 +28,9 @@ ActionSelector = Callable[[object, object, object], int]
 ENVIRONMENT_WRAPPERS: Dict[str, EnvironmentWrapper] = {
     "Taxi-v3": TaxiEnvironment,
     "Blackjack-v1": BlackjackEnvironment,
+    "CliffWalking-v1": CliffEnvironment,
+    "FrozenLake-v1": FrozenLakeEnvironment,
+    "MountainCar-v0": MountainCarEnvironment
 }
 
 
@@ -40,6 +47,9 @@ class AgentPlaySpec:
 def _tabular_default_model(env_name: str) -> str:
     return f"{env_name.lower()}-tabular-agent.pkl"
 
+def _sarsa_default_model(env_name: str) -> str:
+    return f"{env_name.lower()}-sarsa-agent.pkl"
+
 
 def _linear_default_model(env_name: str) -> str:
     return f"{env_name.lower()}-linear-agent.pkl"
@@ -50,6 +60,10 @@ def _neural_default_model(env_name: str) -> str:
 
 
 def _select_action_tabular(agent: QLearningAgentTabular, env, state) -> int:
+    state_id = env.get_state_id(state)
+    return agent.choose_action(state_id, is_in_exploration_mode=False)
+
+def _select_action_sarsa(agent: SarsaAgentTabular, env, state) -> int:
     state_id = env.get_state_id(state)
     return agent.choose_action(state_id, is_in_exploration_mode=False)
 
@@ -68,6 +82,14 @@ AGENT_REGISTRY: Dict[str, AgentPlaySpec] = {
         label="Tabular",
         default_model_path=_tabular_default_model,
         load_agent=lambda path, **_: QLearningAgentTabular.load_agent(path),
+        requires_env_for_load=False,
+        set_env_after_load=True,
+        select_action=_select_action_tabular,
+    ),
+    "sarsa": AgentPlaySpec(
+        label="Sarsa",
+        default_model_path=_tabular_default_model,
+        load_agent=lambda path, **_: SarsaAgentTabular.load_agent(path),
         requires_env_for_load=False,
         set_env_after_load=True,
         select_action=_select_action_tabular,

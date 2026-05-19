@@ -1,0 +1,4 @@
+python ./play_connect_four_minimax.py -a minimax
+python ./play_connect_four.py -a mcts
+python ./play_gomoku.py -a minimax
+python ./play_gomoku.py -a mcts

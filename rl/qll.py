@@ -7,9 +7,16 @@ from rl.environment import Environment
 from rl.qll_taxi_feature_extractor import TaxiFeatureExtractor
 from rl.qll_blackjack_feature_extractor import BlackjackFeatureExtractor
 
+from rl.qll_cliff_feature_extractor import CliffFeatureExtractor
+from rl.qll_frozen_lake_feature_extrator import FrozenLakeFeatureExtractor
+from rl.qll_mountain_car_feature_extrator import MountainCarFeatureExtractor
+
 feature_extractors_dict = {
     "Blackjack-v1": BlackjackFeatureExtractor,
-    "Taxi-v3": TaxiFeatureExtractor
+    "Taxi-v3": TaxiFeatureExtractor,
+    "CliffWalking-v1": CliffFeatureExtractor,
+    "FrozenLake-v1": FrozenLakeFeatureExtractor,
+    "MountainCar-v0": MountainCarFeatureExtractor
 }
 
 

@@ -21,6 +21,11 @@ from rl.environment_taxi import TaxiEnvironment
 from rl.qll import QLearningAgentLinear
 from rl.qlt import QLearningAgentTabular
 
+from rl.environment_cliff import CliffEnvironment
+from rl.environment_frozen_lake import FrozenLakeEnvironment
+from rl.environment_mountain_car import MountainCarEnvironment
+from rl.sarsa import SarsaAgentTabular
+
 
 EnvironmentFactory = Callable[[gym.Env], object]
 AgentBuilder = Callable[[object, argparse.Namespace], object]
@@ -30,6 +35,9 @@ TrainFn = Callable[[object, argparse.Namespace], Dict[str, Iterable[float]]]
 environment_dict: Dict[str, EnvironmentFactory] = {
     "Blackjack-v1": BlackjackEnvironment,
     "Taxi-v3": TaxiEnvironment,
+    "CliffWalking-v1": CliffEnvironment,
+    "FrozenLake-v1": FrozenLakeEnvironment,
+    "MountainCar-v0": MountainCarEnvironment
 }
 
 
@@ -47,6 +55,16 @@ def _safe_savgol(values: np.ndarray) -> np.ndarray:
 
 
 def _train_tabular(agent: QLearningAgentTabular, args: argparse.Namespace) -> Dict[str, Iterable[float]]:
+    history = agent.train(args.num_episodes)
+    epsilons = history.get("epsilons", getattr(agent, "epsilons_", []))
+    return {
+        "rewards": history.get("rewards", []),
+        "penalties": history.get("penalties", []),
+        "epsilons": epsilons,
+        "steps": history.get("steps", []),
+    }
+
+def _train_sarsa(agent: SarsaAgentTabular, args: argparse.Namespace) -> Dict[str, Iterable[float]]:
     history = agent.train(args.num_episodes)
     epsilons = history.get("epsilons", getattr(agent, "epsilons_", []))
     return {
@@ -116,6 +134,17 @@ def _build_tabular(env, args: argparse.Namespace) -> QLearningAgentTabular:
         verbose=not args.quiet,
     )
 
+def _build_sarsa(env, args: argparse.Namespace) -> SarsaAgentTabular:
+    return SarsaAgentTabular(
+        env=env,
+        learning_rate=args.learning_rate,
+        gamma=args.gamma,
+        epsilon_decay_rate=args.epsilon_decay_rate,
+        min_epsilon=args.min_epsilon,
+        max_epsilon=args.max_epsilon,
+        verbose=not args.quiet,
+    )
+
 
 def _build_linear(env, args: argparse.Namespace) -> QLearningAgentLinear:
     return QLearningAgentLinear(
@@ -160,6 +189,19 @@ AGENT_REGISTRY: MutableMapping[str, AgentSpec] = {
         default_min_epsilon=0.01,
         default_max_epsilon=1.0,
     ),
+    "sarsa": AgentSpec(
+        build_agent=_build_sarsa,
+        train_agent=_train_sarsa,
+        basename_fn=lambda env_name: f"{env_name.lower()}-sarsa-agent",
+        filename_fn=lambda base: f"{base}.pkl",
+        label="Sarsa",
+        default_learning_rate=0.7,
+        default_gamma=0.618,
+        default_epsilon_decay_rate=0.0001,
+        default_max_steps=500,
+        default_min_epsilon=0.01,
+        default_max_epsilon=1.0,
+    ),
     "linear": AgentSpec(
         build_agent=_build_linear,
         train_agent=_train_linear,
@@ -190,7 +232,7 @@ AGENT_REGISTRY: MutableMapping[str, AgentSpec] = {
 
 def _prepare_parser() -> argparse.ArgumentParser:
     agent_choices = sorted(set(AGENT_REGISTRY.keys()))
-    parser = argparse.ArgumentParser(description="Train Q-Learning agents (tabular, linear, neural)")
+    parser = argparse.ArgumentParser(description="Train Q-Learning agents (tabular, sarsa, linear, neural)")
     parser.add_argument("--agent", choices=agent_choices, default="tabular",
                         help="Agent variant to train")
     parser.add_argument("--env_name", type=str, default="Taxi-v3", help="Environment name")
