@@ -56,7 +56,7 @@ def evaluate_gomoku(board, player):
     return score
 
 
-def best_move_minimax(game, depth=2):
+def best_move_minimax(game, depth=1):
     player = game.current
     best_score = float('-inf')
     move_choice = None

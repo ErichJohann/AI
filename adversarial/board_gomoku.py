@@ -1,5 +1,6 @@
 from board_game import BoardGame
 from helper_functions import colorize
+from helper_functions import clear_screen
 
 ROWS, COLS = 15, 15
 
@@ -44,6 +45,7 @@ class Gomoku(BoardGame):
         return None
     
     def print_board(self):
+        clear_screen()
         for r in range(ROWS):
             # f"{r:2}" deixa os números 0-9 alinhados perfeitamente com os números 10-14
             row_str = f"{r:2} |"

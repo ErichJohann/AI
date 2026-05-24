@@ -1,0 +1,54 @@
+Q1
+
+python -m rl.ql_train --agent tabular --env_name Blackjack-v1 --num_episodes 100000 --learning_rate 0.005 --gamma 0.5 --epsilon_decay_rate 0.0001 --plot
+python -m rl.ql_play --agent tabular --env_name Blackjack-v1 --num_episodes 100
+python -m rl.ql_play --agent tabular --env_name Blackjack-v1 --num_episodes 10 --render
+
+python -m rl.ql_train --agent tabular --env_name CliffWalking-v1 --num_episodes 10000 --learning_rate 0.05 --gamma 0.9 --epsilon_decay_rate 0.001 --plot
+python -m rl.ql_play --agent tabular --env_name CliffWalking-v1 --num_episodes 100
+python -m rl.ql_play --agent tabular --env_name CliffWalking-v1 --num_episodes 1 --render
+
+python -m rl.ql_train --agent tabular --env_name FrozenLake-v1 --num_episodes 50000 --learning_rate 0.05 --gamma 0.8 --epsilon_decay_rate 0.0001 --plot
+python -m rl.ql_play --agent tabular --env_name FrozenLake-v1 --num_episodes 100
+python -m rl.ql_play --agent tabular --env_name FrozenLake-v1 --num_episodes 1 --render
+
+
+Q2
+
+python -m rl.ql_train --agent tabular --env_name MountainCar-v0 --num_episodes 300 --learning_rate 0.05 --gamma 0.9 --epsilon_decay_rate 0.001 --plot
+python -m rl.ql_play --agent tabular --env_name MountainCar-v0 --num_episodes 100
+python -m rl.ql_play --agent tabular --env_name MountainCar-v0 --num_episodes 1 --render
+
+
+Q3
+
+python -m rl.ql_train --agent linear --env_name Blackjack-v1 --num_episodes 100000 --learning_rate 0.005 --gamma 0.5 --epsilon_decay_rate 0.0001 --plot
+python -m rl.ql_play --agent linear --env_name Blackjack-v1 --num_episodes 100
+python -m rl.ql_play --agent linear --env_name Blackjack-v1 --num_episodes 10 --render
+
+python -m rl.ql_train --agent linear --env_name CliffWalking-v1 --num_episodes 2500 --max_steps 100 --learning_rate 0.05 --gamma 0.99 --epsilon_decay_rate 0.001 --plot
+python -m rl.ql_play --agent linear --env_name CliffWalking-v1 --num_episodes 100
+python -m rl.ql_play --agent linear --env_name CliffWalking-v1 --num_episodes 1 --render
+
+python -m rl.ql_train --agent linear --env_name FrozenLake-v1 --num_episodes 25000 --learning_rate 0.05 --gamma 0.9 --epsilon_decay_rate 0.0001 --plot
+python -m rl.ql_play --agent linear --env_name FrozenLake-v1 --num_episodes 100
+python -m rl.ql_play --agent linear --env_name FrozenLake-v1 --num_episodes 1 --render
+
+python -m rl.ql_train --agent linear --env_name MountainCar-v0 --num_episodes 2500 --learning_rate 0.01 --gamma 0.99 --epsilon_decay_rate 0.01 --plot
+python -m rl.ql_play --agent linear --env_name MountainCar-v0 --num_episodes 100
+python -m rl.ql_play --agent linear --env_name MountainCar-v0 --num_episodes 1 --render
+
+
+Q4
+
+python -m rl.ql_train --agent sarsa --env_name Blackjack-v1 --num_episodes 100000 --learning_rate 0.005 --gamma 0.5 --epsilon_decay_rate 0.0001 --plot
+python -m rl.ql_play --agent sarsa --env_name Blackjack-v1 --num_episodes 100
+python -m rl.ql_play --agent sarsa --env_name Blackjack-v1 --num_episodes 10 --render
+
+python -m rl.ql_train --agent sarsa --env_name CliffWalking-v1 --num_episodes 300 --max_steps 50 --learning_rate 0.1 --gamma 0.99 --epsilon_decay_rate 0.001 --plot
+python -m rl.ql_play --agent sarsa --env_name CliffWalking-v1 --num_episodes 100
+python -m rl.ql_play --agent sarsa --env_name CliffWalking-v1 --num_episodes 1 --render
+
+python -m rl.ql_train --agent sarsa --env_name FrozenLake-v1 --num_episodes 50000 --learning_rate 0.05 --gamma 0.8 --epsilon_decay_rate 0.0001 --plot
+python -m rl.ql_play --agent sarsa --env_name FrozenLake-v1 --num_episodes 100
+python -m rl.ql_play --agent sarsa --env_name FrozenLake-v1 --num_episodes 1 --render

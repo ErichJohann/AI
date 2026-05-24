@@ -61,18 +61,15 @@ class MountainCarFeatureExtractor(FeatureExtractor):
         '''
         position, velocity = state
 
-        # 1. Identifica em qual caixinha (bin) a posição e velocidade atuais caem
         pos_idx = np.digitize(position, self.pos_bins) - 1
         vel_idx = np.digitize(velocity, self.vel_bins) - 1
 
-        # 2. Ativação One-Hot por intervalo
         pos_features = np.zeros(self.num_bins_pos)
         pos_features[pos_idx] = 1.0
         
         vel_features = np.zeros(self.num_bins_vel)
         vel_features[vel_idx] = 1.0
 
-        # 3. Combina as características de estado com o termo de Bias (1.0)
         state_features = np.concatenate(([1.0], pos_features, vel_features))
 
         action_one_hot = self.get_action_one_hot_encoded(action)

@@ -80,6 +80,7 @@ def _train_linear(agent: QLearningAgentLinear, args: argparse.Namespace) -> Dict
         num_episodes=args.num_episodes,
         max_steps_per_episode=args.max_steps,
     )
+    print(agent.get_weights())
     if isinstance(result, dict):
         return result
     # Backwards compatibility: older agents returned tuples
